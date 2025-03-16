@@ -9,3 +9,6 @@ spring:
       enabled: true
   profiles:
     active: loadInitialData
+
+server:
+  port: 8081
