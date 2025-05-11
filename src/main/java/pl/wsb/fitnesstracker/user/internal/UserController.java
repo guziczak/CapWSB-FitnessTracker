@@ -1,7 +1,9 @@
 package pl.wsb.fitnesstracker.user.internal;
 
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import pl.wsb.fitnesstracker.user.api.User;
 
 import java.util.List;
 
@@ -13,6 +15,8 @@ class UserController {
     private final UserServiceImpl userService;
 
     private final UserMapper userMapper;
+
+    private final EntityManager entityManager;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
@@ -32,12 +36,9 @@ class UserController {
 
     @PostMapping
     public UserDto addUser(@RequestBody UserDto userDto) throws InterruptedException {
-
-        // TODO: Implement the method to add a new user.
-        //  You can use the @RequestBody annotation to map the request body to the UserDto object.
-
-
-        return null;
+        User user = userMapper.toEntity(userDto);
+        entityManager.flush();
+        return userDto;
     }
 
 }
