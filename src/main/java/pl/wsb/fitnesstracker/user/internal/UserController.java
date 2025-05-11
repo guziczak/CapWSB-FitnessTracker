@@ -35,10 +35,12 @@ class UserController {
     }
 
     @PostMapping
+    @ResponseStatus(org.springframework.http.HttpStatus.CREATED)
     public UserDto addUser(@RequestBody UserDto userDto) throws InterruptedException {
         User user = userMapper.toEntity(userDto);
+        User savedUser = userService.createUser(user);
         entityManager.flush();
-        return userDto;
+        return userMapper.toDto(savedUser);
     }
 
 }
