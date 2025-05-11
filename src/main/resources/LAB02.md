@@ -5,7 +5,7 @@ Frameworka Spring.
 Termin upływa po 14 dniach od rozpoczęciu laboratorium. Po przesłaniu zadania proszę o zaznaczenie na Moodle wykonanie
 zadania.
 
-## ZADANIE 1. Sieciowe API do operacji typu CRUD na klientach
+## ZADANIE 1. Sieciowe API do operacji typu CRUD na użytkownikach
 
 ### Potrzeba biznesowa
 
