@@ -54,4 +54,10 @@ class UserController {
         return userMapper.toDto(savedUser);
     }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{userId}")
+    public void deleteUserById(@PathVariable int userId) {
+        userService.deleteUserById((long) userId);
+    }
+
 }
