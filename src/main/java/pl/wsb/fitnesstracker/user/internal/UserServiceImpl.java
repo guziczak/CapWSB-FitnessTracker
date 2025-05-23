@@ -37,6 +37,11 @@ class UserServiceImpl implements UserService, UserProvider {
     }
 
     @Override
+    public List<User> getUsersByPartOfEmail(final String email) {
+        return userRepository.findByPartOfEmail(email);
+    }
+
+    @Override
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }

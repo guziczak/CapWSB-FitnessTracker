@@ -1,16 +1,12 @@
 package pl.wsb.fitnesstracker.user.internal;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import jakarta.persistence.EntityManager;
-import lombok.RequiredArgsConstructor;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
-import pl.wsb.fitnesstracker.user.api.User;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
-import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
 @RestController
@@ -21,8 +17,6 @@ class UserController {
     private final UserServiceImpl userService;
 
     private final UserMapper userMapper;
-
-    private final EntityManager entityManager;
 
     @GetMapping
     public List<UserDto> getAllUsers() {
@@ -63,21 +57,21 @@ class UserController {
         userService.deleteUserById((long) userId);
     }
 
-    @GetMapping("/get-users-by-part-of-email/{email}")
-    public List<UserIdAndEmailRes> getByEmail(@PathVariable String email) {
-        return userService.findAllUsers()
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/email")
+    public List<UserIdAndEmailRes> getByEmail(@RequestParam String email) {
+        return userService.getUsersByPartOfEmail(email)
                 .stream()
                 .map(userMapper::toIdAndEmail)
-                .filter(el -> el.email().toLowerCase().contains(email.toLowerCase()))
                 .toList();
     }
 
-    @GetMapping("/find-older-than/{age}")
-    public List<UserDto> getOlderThanAge(@PathVariable int age) {
+    @GetMapping("/older/{time}")
+    public List<UserDto> getOlderThanAge(@PathVariable LocalDate time) {
         return userService.findAllUsers()
                 .stream()
                 .map(userMapper::toDto)
-                .filter(el -> el.birthdate().until(ChronoLocalDate.from(LocalDate.now())).getYears() > age)
+                .filter(el -> el.birthdate().isBefore(time))
                 .toList();
     }
 

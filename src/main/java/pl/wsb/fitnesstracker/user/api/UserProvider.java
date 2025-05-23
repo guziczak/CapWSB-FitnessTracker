@@ -23,6 +23,8 @@ public interface UserProvider {
      */
     Optional<User> getUserByEmail(String email);
 
+    List<User> getUsersByPartOfEmail(String email);
+
     /**
      * Retrieves all users.
      *
