@@ -38,9 +38,10 @@ class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable int id) {
+    public ResponseEntity<UserDto> getUserById(@PathVariable int id) {
         return userService
                 .getUser((long) id)
+                .map(userMapper::toDto)
                 .map(ResponseEntity::ok)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
@@ -57,6 +58,15 @@ class UserController {
     @DeleteMapping("/{userId}")
     public void deleteUserById(@PathVariable int userId) {
         userService.deleteUserById((long) userId);
+    }
+
+    @GetMapping("/get-users-by-part-of-email/{email}")
+    public List<UserIdAndEmailRes> getByEmail(@PathVariable String email) {
+        return userService.findAllUsers()
+                .stream()
+                .map(userMapper::toIdAndEmail)
+                .filter(el -> el.email().toLowerCase().contains(email.toLowerCase()))
+                .toList();
     }
 
 }

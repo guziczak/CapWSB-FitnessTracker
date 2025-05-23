@@ -28,4 +28,8 @@ class UserMapper {
                 user.getLastName());
     }
 
+    UserIdAndEmailRes toIdAndEmail(User user) {
+        return new UserIdAndEmailRes(user.getId(), user.getEmail());
+    }
+
 }
