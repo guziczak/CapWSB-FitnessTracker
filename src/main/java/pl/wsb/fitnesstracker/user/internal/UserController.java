@@ -8,6 +8,9 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.bind.annotation.*;
 import pl.wsb.fitnesstracker.user.api.User;
 
+import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.TemporalAccessor;
 import java.util.List;
 
 @RestController
@@ -66,6 +69,15 @@ class UserController {
                 .stream()
                 .map(userMapper::toIdAndEmail)
                 .filter(el -> el.email().toLowerCase().contains(email.toLowerCase()))
+                .toList();
+    }
+
+    @GetMapping("/find-older-than/{age}")
+    public List<UserDto> getOlderThanAge(@PathVariable int age) {
+        return userService.findAllUsers()
+                .stream()
+                .map(userMapper::toDto)
+                .filter(el -> el.birthdate().until(ChronoLocalDate.from(LocalDate.now())).getYears() > age)
                 .toList();
     }
 
