@@ -9,4 +9,6 @@ public interface UserService {
     User createUser(User user);
 
     void deleteUserById(Long id);
+
+    void updateUser(Long userId, pl.wsb.fitnesstracker.user.internal.UserDto userDto);
 }

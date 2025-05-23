@@ -75,4 +75,11 @@ class UserController {
                 .toList();
     }
 
+    @PutMapping("/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateUser(@PathVariable Long userId, @RequestBody UserDto request) {
+        userService.updateUser(userId, request);
+    }
+
+
 }
