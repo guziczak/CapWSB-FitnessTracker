@@ -31,7 +31,8 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
     private MockMvc mockMvc;
 
     private static User generateClient() {
-        return new User(randomUUID().toString(), randomUUID().toString(), now(), randomUUID().toString());
+        String uuid = randomUUID().toString();
+        return new User(uuid, uuid, now().minusYears(25), uuid + "@test.com");
     }
 
     private static Training generateTraining(User user) throws ParseException {
