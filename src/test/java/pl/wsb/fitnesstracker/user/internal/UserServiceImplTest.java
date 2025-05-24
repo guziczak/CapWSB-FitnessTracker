@@ -180,6 +180,21 @@ class UserServiceImplTest {
     }
 
     @Test
+    void shouldUpdateOnlyEmailAndBirthdate() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        userService.updateUser(1L, null, null, "newemail@example.com", LocalDate.of(1991, 2, 2));
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(testUser);
+        assertEquals("John", testUser.getFirstName()); // unchanged
+        assertEquals("Doe", testUser.getLastName()); // unchanged
+        assertEquals("newemail@example.com", testUser.getEmail());
+        assertEquals(LocalDate.of(1991, 2, 2), testUser.getBirthdate());
+    }
+
+    @Test
     void shouldThrowExceptionWhenUpdatingNonExistentUser() {
         when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
@@ -215,5 +230,40 @@ class UserServiceImplTest {
 
         assertTrue(result.isEmpty());
         verify(userRepository).findByBirthdateBefore(any(LocalDate.class));
+    }
+
+    @Test
+    void shouldUpdateOnlyFirstName() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        userService.updateUser(1L, "NewFirstName", null, null, null);
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(testUser);
+        assertEquals("NewFirstName", testUser.getFirstName());
+        assertEquals("Doe", testUser.getLastName()); // unchanged
+        assertEquals("john@example.com", testUser.getEmail()); // unchanged
+        assertEquals(LocalDate.of(1990, 1, 1), testUser.getBirthdate()); // unchanged
+    }
+
+    @Test
+    void shouldNotUpdateWhenAllFieldsNull() {
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        when(userRepository.save(any(User.class))).thenReturn(testUser);
+
+        String originalFirstName = testUser.getFirstName();
+        String originalLastName = testUser.getLastName();
+        String originalEmail = testUser.getEmail();
+        LocalDate originalBirthdate = testUser.getBirthdate();
+
+        userService.updateUser(1L, null, null, null, null);
+
+        verify(userRepository).findById(1L);
+        verify(userRepository).save(testUser);
+        assertEquals(originalFirstName, testUser.getFirstName());
+        assertEquals(originalLastName, testUser.getLastName());
+        assertEquals(originalEmail, testUser.getEmail());
+        assertEquals(originalBirthdate, testUser.getBirthdate());
     }
 }
