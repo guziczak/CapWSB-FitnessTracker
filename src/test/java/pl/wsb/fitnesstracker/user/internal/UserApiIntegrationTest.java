@@ -31,11 +31,13 @@ class UserApiIntegrationTest extends IntegrationTestBase {
     private MockMvc mockMvc;
 
     public static User generateUser() {
-        return new User(randomUUID().toString(), randomUUID().toString(), LocalDate.now(), randomUUID().toString());
+        String uuid = randomUUID().toString();
+        return new User(uuid, uuid, LocalDate.now().minusYears(25), uuid + "@test.com");
     }
 
     private static User generateUserWithDate(LocalDate date) {
-        return new User(randomUUID().toString(), randomUUID().toString(), date, randomUUID().toString());
+        String uuid = randomUUID().toString();
+        return new User(uuid, uuid, date, uuid + "@test.com");
     }
 
     @Test
@@ -109,7 +111,7 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         existingUser(generateUserWithDate(LocalDate.of(2024, 8, 11)));
 
 
-        mockMvc.perform(get("/v1/users/older/{time}", LocalDate.of(2024, 8, 10)).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/v1/users/older/{age}", 20).contentType(MediaType.APPLICATION_JSON))
                 .andDo(log())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").isArray())
@@ -144,7 +146,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         final String USER_EMAIL = "mike.scott@domain.com";
 
         String creationRequest = """
-                
                 {
                 "firstName": "%s",
                 "lastName": "%s",
@@ -153,7 +154,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 }
                 """.formatted(
                 USER_NAME,
-
                 USER_LAST_NAME,
                 USER_BIRTHDATE,
                 USER_EMAIL);
@@ -184,7 +184,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         final String USER_EMAIL = "mike.scott@domain.com";
 
         String updateRequest = """
-                
                 {
                 "firstName": "%s",
                 "lastName": "%s",
@@ -193,7 +192,6 @@ class UserApiIntegrationTest extends IntegrationTestBase {
                 }
                 """.formatted(
                 USER_NAME,
-
                 USER_LAST_NAME,
                 USER_BIRTHDATE,
                 USER_EMAIL);
@@ -210,6 +208,4 @@ class UserApiIntegrationTest extends IntegrationTestBase {
         assertThat(user.getBirthdate()).isEqualTo(LocalDate.parse(USER_BIRTHDATE));
         assertThat(user.getEmail()).isEqualTo(USER_EMAIL);
     }
-
-
 }
