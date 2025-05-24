@@ -5,9 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
 import pl.wsb.fitnesstracker.training.api.Training;
+import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
 import pl.wsb.fitnesstracker.user.api.User;
+import pl.wsb.fitnesstracker.user.internal.UserRepository;
 
 import java.util.List;
 
@@ -16,10 +17,10 @@ import java.util.List;
 public abstract class IntegrationTestBase {
 
     @Autowired
-    private JpaRepository<User, Long> userRepository;
+    private UserRepository userRepository;
 
     @Autowired
-    private JpaRepository<Training, Long> trainingRepository;
+    private TrainingRepository trainingRepository;
 
     @AfterEach
     void cleanUp() {

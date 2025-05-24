@@ -14,8 +14,8 @@ import pl.wsb.fitnesstracker.user.api.User;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
-import static java.time.LocalDate.now;
 import static java.util.UUID.randomUUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
@@ -31,8 +31,13 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
     private MockMvc mockMvc;
 
     private static User generateClient() {
-        String uuid = randomUUID().toString();
-        return new User(uuid, uuid, now().minusYears(25), uuid + "@test.com");
+        String uuid = randomUUID().toString().substring(0, 8);
+        return new User(
+                "Test" + uuid,
+                "User" + uuid,
+                LocalDate.of(1990, 1, 1),
+                "test." + uuid + "@example.com"
+        );
     }
 
     private static Training generateTraining(User user) throws ParseException {
@@ -224,4 +229,3 @@ class TrainingApiIntegrationTest extends IntegrationTestBase {
 
 
 }
-
