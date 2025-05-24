@@ -4,10 +4,12 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserProvider;
 import pl.wsb.fitnesstracker.user.api.UserService;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +21,7 @@ class UserServiceImpl implements UserService, UserProvider {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public User createUser(final User user) {
         log.info("Creating User {}", user);
         if (user.getId() != null) {
@@ -48,19 +51,31 @@ class UserServiceImpl implements UserService, UserProvider {
     }
 
     @Override
-    public void deleteUserById(Long id) {userRepository.deleteById(id);}
+    @Transactional
+    public void deleteUserById(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new EntityNotFoundException("User with ID " + id + " not found");
+        }
+        userRepository.deleteById(id);
+    }
 
     @Override
-    public void updateUser(Long userId, UserDto userDto) {
+    @Transactional
+    public void updateUser(Long userId, String firstName, String lastName, String email, LocalDate birthdate) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-        if (userDto.firstName() != null) user.setFirstName(userDto.firstName());
-        if (userDto.lastName() != null) user.setLastName(userDto.lastName());
-        if (userDto.email() != null) user.setEmail(userDto.email());
-        if (userDto.birthdate() != null) user.setBirthdate(userDto.birthdate());
+        if (firstName != null) user.setFirstName(firstName);
+        if (lastName != null) user.setLastName(lastName);
+        if (email != null) user.setEmail(email);
+        if (birthdate != null) user.setBirthdate(birthdate);
 
         userRepository.save(user);
     }
 
+    @Override
+    public List<User> getUsersOlderThan(int age) {
+        LocalDate cutoffDate = LocalDate.now().minusYears(age);
+        return userRepository.findByBirthdateBefore(cutoffDate);
+    }
 }
