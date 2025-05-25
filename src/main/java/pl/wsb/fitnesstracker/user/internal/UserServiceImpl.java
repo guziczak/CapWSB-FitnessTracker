@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserProvider;
 import pl.wsb.fitnesstracker.user.api.UserService;
+import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Optional;
 class UserServiceImpl implements UserService, UserProvider {
 
     private final UserRepository userRepository;
+    private final TrainingRepository trainingRepository;
 
     @Override
     @Transactional
@@ -53,9 +55,11 @@ class UserServiceImpl implements UserService, UserProvider {
     @Override
     @Transactional
     public void deleteUserById(Long id) {
-        if (!userRepository.existsById(id)) {
-            throw new EntityNotFoundException("User with ID " + id + " not found");
-        }
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with ID " + id + " not found"));
+        
+        trainingRepository.deleteByUser(user);
+        
         userRepository.deleteById(id);
     }
 
