@@ -23,6 +23,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Nullable
+    @Setter
     private Long id;
 
     @Column(name = "first_name", nullable = false)

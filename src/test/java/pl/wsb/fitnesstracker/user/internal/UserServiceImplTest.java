@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import pl.wsb.fitnesstracker.user.api.User;
+import pl.wsb.fitnesstracker.training.internal.TrainingRepository;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -23,6 +24,9 @@ class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
+    
+    @Mock
+    private TrainingRepository trainingRepository;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -38,14 +42,7 @@ class UserServiceImplTest {
     
     private User createUserWithId(Long id, String firstName, String lastName, LocalDate birthdate, String email) {
         User user = new User(firstName, lastName, birthdate, email);
-        // Use reflection to set the ID since there's no setter
-        try {
-            java.lang.reflect.Field idField = User.class.getDeclaredField("id");
-            idField.setAccessible(true);
-            idField.set(user, id);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to set user ID", e);
-        }
+        user.setId(id);
         return user;
     }
 
@@ -130,21 +127,24 @@ class UserServiceImplTest {
 
     @Test
     void shouldDeleteUserById() {
-        when(userRepository.existsById(1L)).thenReturn(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(testUser));
+        doNothing().when(trainingRepository).deleteByUser(testUser);
         doNothing().when(userRepository).deleteById(1L);
 
         userService.deleteUserById(1L);
 
-        verify(userRepository).existsById(1L);
+        verify(userRepository).findById(1L);
+        verify(trainingRepository).deleteByUser(testUser);
         verify(userRepository).deleteById(1L);
     }
 
     @Test
     void shouldThrowExceptionWhenDeletingNonExistentUser() {
-        when(userRepository.existsById(999L)).thenReturn(false);
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(EntityNotFoundException.class, () -> userService.deleteUserById(999L));
-        verify(userRepository).existsById(999L);
+        verify(userRepository).findById(999L);
+        verify(trainingRepository, never()).deleteByUser(any());
         verify(userRepository, never()).deleteById(any());
     }
 
