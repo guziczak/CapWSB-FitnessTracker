@@ -10,10 +10,10 @@ spring:
   profiles:
     active: loadInitialData
   mail:
-    host: in-v3.mailjet.com
-    port: 587
-    username: api_key
-    password: api_secret
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: c649a9fb087380
+    password: 07e2c6d3c922ad
     properties:
       mail:
         smtp:
@@ -21,7 +21,7 @@ spring:
           starttls:
             enable: true
 mail:
-  from: some_email
+  from: noreply.fitnesstracker@gmail.com
 
 server:
   port: 8081

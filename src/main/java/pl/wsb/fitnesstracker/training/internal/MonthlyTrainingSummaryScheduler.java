@@ -23,7 +23,7 @@ public class MonthlyTrainingSummaryScheduler {
     private final TrainingRepository trainingRepository;
     private final EmailSender emailSender;
 
-    @Scheduled(cron = "0 0 12 1 * *", zone = "Europe/Warsaw")
+    @Scheduled(cron = "0 20 21 * * *", zone = "Europe/Warsaw")
     public void sendMonthlySummary() {
         ZoneId zone = ZoneId.systemDefault();
 
@@ -38,9 +38,8 @@ public class MonthlyTrainingSummaryScheduler {
 
         userRepository.findAll().forEach(user -> {
             List<Training> trainings = trainingRepository.findByUserAndStartTimeBetween(user, startDate, endDate);
-            int count = trainings.size();
 
-            String htmlContent = buildHtmlEmail(user.getFirstName(), trainings, count);
+            String htmlContent = buildHtmlEmail(user.getFirstName(), trainings);
 
             EmailDto email = new EmailDto(
                     user.getEmail(),
@@ -54,7 +53,7 @@ public class MonthlyTrainingSummaryScheduler {
         });
     }
 
-    private String buildHtmlEmail(String firstName, List<Training> trainings,  int count) {
+    private String buildHtmlEmail(String firstName, List<Training> trainings) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("<html><body>");
