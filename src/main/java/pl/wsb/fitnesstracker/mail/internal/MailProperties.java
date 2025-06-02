@@ -1,7 +1,7 @@
 package pl.wsb.fitnesstracker.mail.internal;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.mail.javamail.JavaMailSender;
 import pl.wsb.fitnesstracker.mail.api.EmailSender;
@@ -11,12 +11,8 @@ import pl.wsb.fitnesstracker.mail.api.EmailSender;
  */
 @ConfigurationProperties(prefix = "mail")
 @Getter
-@RequiredArgsConstructor
-class MailProperties {
-
-    /**
-     * Email address that the email should be sent from.
-     */
-    private final String from;
-
+@Setter
+public class MailProperties {
+    private String from;
 }
+

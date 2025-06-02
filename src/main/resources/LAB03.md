@@ -18,12 +18,12 @@ Jako użytkownik, chce mieć możliwość dostępu do panelu z treningami:
 
 Stworzone API powinno pozwalać na:
 
-- [ ] wyszukiwanie wszystkich treningów
-- [ ] wyszukiwanie treningów dla określonego Użytkownika:
-- [ ] wyszukiwanie wszystkich treningów zakończonych (po konkretnej zdefiniowanej dacie)
-- [ ] wyszukiwanie wszystkich treningów dla konkretnej aktywności (np. wszystkie treningi biegowe)
-- [ ] utworzenie nowego treningu
-- [ ] aktualizacja treningu (dowolnie wybrane pole np. dystans)
+- [x] wyszukiwanie wszystkich treningów
+- [x] wyszukiwanie treningów dla określonego Użytkownika:
+- [x] wyszukiwanie wszystkich treningów zakończonych (po konkretnej zdefiniowanej dacie)
+- [x] wyszukiwanie wszystkich treningów dla konkretnej aktywności (np. wszystkie treningi biegowe)
+- [x] utworzenie nowego treningu
+- [x] aktualizacja treningu (dowolnie wybrane pole np. dystans)
 
 ### Wymagania techniczne
 
@@ -49,9 +49,9 @@ miesiącu.
 
 ### Wymagania funkcjonalne
 
-- [ ] w oparciu o ustalony zdefiniowany czas (co miesiąc) generowany jest raport z treningami dla każdego użytkownika z
+- [x] w oparciu o ustalony zdefiniowany czas (co miesiąc) generowany jest raport z treningami dla każdego użytkownika z
   danego miesiąca
-- [ ] raport wysyłany jest za pomocą e-mail z podsumowaniem do każdego użytkownika, ile treningów ma zarejestrowanych
+- [x] raport wysyłany jest za pomocą e-mail z podsumowaniem do każdego użytkownika, ile treningów ma zarejestrowanych
   łącznie
 
 ## ZADANIE 3 (opcjonalne). Sieciowe API do operacji typu CRUD na Statistics (bez użycia rekordów)

@@ -9,6 +9,19 @@ spring:
       enabled: true
   profiles:
     active: loadInitialData
+  mail:
+    host: in-v3.mailjet.com
+    port: 587
+    username: api_key
+    password: api_secret
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+mail:
+  from: some_email
 
 server:
   port: 8081
