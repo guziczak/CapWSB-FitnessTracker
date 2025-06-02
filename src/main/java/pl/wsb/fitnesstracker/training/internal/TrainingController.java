@@ -30,10 +30,10 @@ public class TrainingController {
      * @return list of all trainings
      */
     @GetMapping
-    public List<TrainingDTO> getAllTrainings() {
+    public List<UserTrainingRes> getAllTrainings() {
         return trainingProvider.findAllTrainings()
                 .stream()
-                .map(trainingMapper::toDto)
+                .map(trainingMapper::toUserTrainingRes)
                 .toList();
     }
 
@@ -44,10 +44,10 @@ public class TrainingController {
      * @return list of trainings for the user
      */
     @GetMapping("/{userId}")
-    public List<TrainingDTO> getTrainingsByUserId(@PathVariable Long userId) {
+    public List<UserTrainingRes> getTrainingsByUserId(@PathVariable Long userId) {
         return trainingProvider.findTrainingsByUserId(userId)
                 .stream()
-                .map(trainingMapper::toDto)
+                .map(trainingMapper::toUserTrainingRes)
                 .toList();
     }
 
@@ -58,13 +58,13 @@ public class TrainingController {
      * @return list of trainings finished after the time
      */
     @GetMapping("/finished/{afterTime}")
-    public List<TrainingDTO> getFinishedTrainingsAfter(@PathVariable String afterTime) throws ParseException {
+    public List<UserTrainingRes> getFinishedTrainingsAfter(@PathVariable String afterTime) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(afterTime);
         
         return trainingProvider.findFinishedTrainingsAfter(date)
                 .stream()
-                .map(trainingMapper::toDto)
+                .map(trainingMapper::toUserTrainingRes)
                 .toList();
     }
 
@@ -75,10 +75,10 @@ public class TrainingController {
      * @return list of trainings with the specified activity type
      */
     @GetMapping("/activityType")
-    public List<TrainingDTO> getTrainingsByActivityType(@RequestParam ActivityType activityType) {
+    public List<UserTrainingRes> getTrainingsByActivityType(@RequestParam ActivityType activityType) {
         return trainingProvider.findTrainingsByActivityType(activityType)
                 .stream()
-                .map(trainingMapper::toDto)
+                .map(trainingMapper::toUserTrainingRes)
                 .toList();
     }
 
@@ -90,10 +90,10 @@ public class TrainingController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TrainingDTO createTraining(@RequestBody @Valid TrainingDTO trainingDto) {
+    public UserTrainingRes createTraining(@RequestBody @Valid TrainingDTO trainingDto) {
         Training training = trainingMapper.toEntity(trainingDto);
         Training createdTraining = trainingProvider.createTraining(training);
-        return trainingMapper.toDto(createdTraining);
+        return trainingMapper.toUserTrainingRes(createdTraining);
     }
 
     /**
