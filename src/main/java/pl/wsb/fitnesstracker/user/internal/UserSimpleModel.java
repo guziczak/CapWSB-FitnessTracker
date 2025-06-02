@@ -10,5 +10,5 @@ import org.springframework.lang.Nullable;
  * @param firstName the user's first name
  * @param lastName the user's last name
  */
-record UserSimpleModel(@Nullable Long id, String firstName, String lastName) {
+public record UserSimpleModel(@Nullable Long id, String firstName, String lastName) {
 }

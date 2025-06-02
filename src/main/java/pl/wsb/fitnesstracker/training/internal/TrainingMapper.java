@@ -6,7 +6,6 @@ import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.user.api.User;
 import pl.wsb.fitnesstracker.user.api.UserNotFoundException;
 import pl.wsb.fitnesstracker.user.api.UserProvider;
-import pl.wsb.fitnesstracker.user.internal.UserDto;
 
 @Component
 @RequiredArgsConstructor
@@ -14,19 +13,9 @@ public class TrainingMapper {
 
     private final UserProvider userProvider;
 
-    public TrainingDto toDto(Training training) {
+    public TrainingDTO toDto(Training training) {
         User user = training.getUser();
-        UserDto userDto = new UserDto(
-                user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getBirthdate(),
-                user.getEmail()
-        );
-        
-        return new TrainingDto(
-                training.getId(),
-                userDto,
+        return new TrainingDTO(
                 user.getId(),
                 training.getStartTime(),
                 training.getEndTime(),
@@ -36,20 +25,34 @@ public class TrainingMapper {
         );
     }
 
-    public Training toEntity(TrainingDto dto) {
-        User user = null;
-        if (dto.userId() != null) {
-            user = userProvider.getUser(dto.userId())
-                    .orElseThrow(() -> new UserNotFoundException(dto.userId()));
-        }
-        
+    public Training toEntity(TrainingDTO dto) {
+        User user = userProvider.getUser(dto.getUserId())
+                .orElseThrow(() -> new UserNotFoundException(dto.getUserId()));
+
         return new Training(
                 user,
-                dto.startTime(),
-                dto.endTime(),
-                dto.activityType(),
-                dto.distance(),
-                dto.averageSpeed()
+                dto.getStartTime(),
+                dto.getEndTime(),
+                dto.getActivityType(),
+                dto.getDistance(),
+                dto.getAverageSpeed()
+        );
+    }
+
+    public UserTrainingRes toUserTrainingRes(Training training) {
+        User user = training.getUser();
+        return new UserTrainingRes(
+                new UserTrainingRes.UserRes(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getEmail()
+                ),
+                training.getStartTime(),
+                training.getEndTime(),
+                training.getActivityType(),
+                training.getDistance(),
+                training.getAverageSpeed()
         );
     }
 }

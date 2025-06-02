@@ -1,10 +1,7 @@
 package pl.wsb.fitnesstracker.training.api;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
 import pl.wsb.fitnesstracker.user.api.User;
 
@@ -13,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "trainings")
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Training {
@@ -42,21 +40,6 @@ public class Training {
     private double averageSpeed;
 
     public Training(
-            final User user,
-            final Date startTime,
-            final Date endTime,
-            final ActivityType activityType,
-            final double distance,
-            final double averageSpeed) {
-        this.user = user;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.activityType = activityType;
-        this.distance = distance;
-        this.averageSpeed = averageSpeed;
-    }
-
-    public void update(
             final User user,
             final Date startTime,
             final Date endTime,

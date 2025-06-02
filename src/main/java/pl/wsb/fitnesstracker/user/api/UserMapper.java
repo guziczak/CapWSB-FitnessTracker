@@ -1,14 +1,16 @@
-package pl.wsb.fitnesstracker.user.internal;
+package pl.wsb.fitnesstracker.user.api;
 
 import org.springframework.stereotype.Component;
-import pl.wsb.fitnesstracker.user.api.User;
+import pl.wsb.fitnesstracker.user.internal.UserDto;
+import pl.wsb.fitnesstracker.user.internal.UserIdAndEmailRes;
+import pl.wsb.fitnesstracker.user.internal.UserSimpleModel;
 
 /**
  * Mapper for converting between User entities and DTOs.
  * Handles transformation of data between different layers.
  */
 @Component
-class UserMapper {
+public class UserMapper {
 
     /**
      * Converts a User entity to UserDto.
@@ -16,7 +18,7 @@ class UserMapper {
      * @param user the entity to convert
      * @return the corresponding DTO
      */
-    UserDto toDto(User user) {
+    public UserDto toDto(User user) {
         return new UserDto(user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
@@ -30,7 +32,7 @@ class UserMapper {
      * @param userDto the DTO to convert
      * @return the corresponding entity
      */
-    User toEntity(UserDto userDto) {
+    public User toEntity(UserDto userDto) {
         return new User(
                 userDto.firstName(),
                 userDto.lastName(),
@@ -44,7 +46,7 @@ class UserMapper {
      * @param user the entity to convert
      * @return the simple model with ID and name
      */
-    UserSimpleModel toSimpleUser(User user) {
+    public UserSimpleModel toSimpleUser(User user) {
         return new UserSimpleModel(user.getId(),
                 user.getFirstName(),
                 user.getLastName());
@@ -56,7 +58,7 @@ class UserMapper {
      * @param user the entity to convert
      * @return the model with ID and email only
      */
-    UserIdAndEmailRes toIdAndEmail(User user) {
+    public UserIdAndEmailRes toIdAndEmail(User user) {
         return new UserIdAndEmailRes(user.getId(), user.getEmail());
     }
 }

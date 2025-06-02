@@ -2,9 +2,7 @@ package pl.wsb.fitnesstracker.training.internal;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.api.TrainingProvider;
@@ -32,7 +30,7 @@ public class TrainingController {
      * @return list of all trainings
      */
     @GetMapping
-    public List<TrainingDto> getAllTrainings() {
+    public List<TrainingDTO> getAllTrainings() {
         return trainingProvider.findAllTrainings()
                 .stream()
                 .map(trainingMapper::toDto)
@@ -46,7 +44,7 @@ public class TrainingController {
      * @return list of trainings for the user
      */
     @GetMapping("/{userId}")
-    public List<TrainingDto> getTrainingsByUserId(@PathVariable Long userId) {
+    public List<TrainingDTO> getTrainingsByUserId(@PathVariable Long userId) {
         return trainingProvider.findTrainingsByUserId(userId)
                 .stream()
                 .map(trainingMapper::toDto)
@@ -60,7 +58,7 @@ public class TrainingController {
      * @return list of trainings finished after the time
      */
     @GetMapping("/finished/{afterTime}")
-    public List<TrainingDto> getFinishedTrainingsAfter(@PathVariable String afterTime) throws ParseException {
+    public List<TrainingDTO> getFinishedTrainingsAfter(@PathVariable String afterTime) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date = sdf.parse(afterTime);
         
@@ -77,7 +75,7 @@ public class TrainingController {
      * @return list of trainings with the specified activity type
      */
     @GetMapping("/activityType")
-    public List<TrainingDto> getTrainingsByActivityType(@RequestParam ActivityType activityType) {
+    public List<TrainingDTO> getTrainingsByActivityType(@RequestParam ActivityType activityType) {
         return trainingProvider.findTrainingsByActivityType(activityType)
                 .stream()
                 .map(trainingMapper::toDto)
@@ -92,7 +90,7 @@ public class TrainingController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TrainingDto createTraining(@RequestBody @Valid TrainingDto trainingDto) {
+    public TrainingDTO createTraining(@RequestBody @Valid TrainingDTO trainingDto) {
         Training training = trainingMapper.toEntity(trainingDto);
         Training createdTraining = trainingProvider.createTraining(training);
         return trainingMapper.toDto(createdTraining);
@@ -106,9 +104,8 @@ public class TrainingController {
      * @return the updated training
      */
     @PutMapping("/{trainingId}")
-    public TrainingDto updateTraining(@PathVariable Long trainingId, @RequestBody @Valid TrainingDto trainingDto) {
-        Training training = trainingMapper.toEntity(trainingDto);
-        Training updatedTraining = trainingProvider.updateTraining(trainingId, training);
-        return trainingMapper.toDto(updatedTraining);
+    public UserTrainingRes updateTraining(@PathVariable Long trainingId, @RequestBody @Valid TrainingDTO trainingDto) {
+        Training updatedTraining = trainingProvider.updateTraining(trainingId, trainingDto);
+        return trainingMapper.toUserTrainingRes(updatedTraining);
     }
 }

@@ -3,6 +3,7 @@ package pl.wsb.fitnesstracker.user.internal;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.wsb.fitnesstracker.user.api.User;
+import pl.wsb.fitnesstracker.user.api.UserMapper;
 
 import java.time.LocalDate;
 

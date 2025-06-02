@@ -1,6 +1,7 @@
 package pl.wsb.fitnesstracker.training.api;
 
 import pl.wsb.fitnesstracker.training.internal.ActivityType;
+import pl.wsb.fitnesstracker.training.internal.TrainingDTO;
 
 import java.util.Date;
 import java.util.List;
@@ -63,6 +64,6 @@ public interface TrainingProvider {
      * @param training the training data
      * @return the updated training
      */
-    Training updateTraining(Long trainingId, Training training);
+    Training updateTraining(Long trainingId, TrainingDTO training);
 
 }
