@@ -2,6 +2,7 @@ package pl.wsb.fitnesstracker.training.internal;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import pl.wsb.fitnesstracker.training.api.ActivityType;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.training.api.TrainingNotFoundException;
 import pl.wsb.fitnesstracker.training.api.TrainingProvider;
@@ -31,17 +32,17 @@ public class TrainingServiceImpl implements TrainingProvider {
 
     @Override
     public List<Training> findTrainingsByUserId(Long userId) {
-        return trainingRepository.findAll().stream().filter(training -> training.getUser().getId().equals(userId)).toList();
+        return trainingRepository.findByUserId(userId);
     }
 
     @Override
     public List<Training> findFinishedTrainingsAfter(Date afterTime) {
-        return trainingRepository.findAll().stream().filter(training -> training.getEndTime().after(afterTime)).toList();
+        return trainingRepository.findByEndTimeAfter(afterTime);
     }
 
     @Override
     public List<Training> findTrainingsByActivityType(ActivityType activityType) {
-        return trainingRepository.findAll().stream().filter(training -> training.getActivityType().equals(activityType)).toList();
+        return trainingRepository.findByActivityType(activityType);
     }
 
     @Override

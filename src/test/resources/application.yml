@@ -1,0 +1,31 @@
+spring:
+  profiles:
+    active: test
+  datasource:
+    url: "jdbc:h2:mem:testdb"
+    driver-class-name: "org.h2.Driver"
+    username: "sa"
+    password: "password"
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+  mail:
+    host: sandbox.smtp.mailtrap.io
+    port: 2525
+    username: c649a9fb087380
+    password: 07e2c6d3c922ad
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mail:
+  from: test@fitnesstracker.com
+
+server:
+  port: 0
