@@ -29,4 +29,16 @@ public class Statistics {
     @Column(name = "total_calories_burned")
     private int totalCaloriesBurned;
 
+    /**
+     * Creates a new Statistics instance for the given user.
+     *
+     * @param user the user for whom the statistics are created
+     */
+    public Statistics(User user) {
+        this.user = user;
+        this.totalTrainings = 0;
+        this.totalDistance = 0.0;
+        this.totalCaloriesBurned = 0;
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import pl.wsb.fitnesstracker.statistics.api.Statistics;
 import pl.wsb.fitnesstracker.training.api.ActivityType;
 import pl.wsb.fitnesstracker.training.api.Training;
 import pl.wsb.fitnesstracker.user.api.User;
@@ -36,6 +37,8 @@ class InitialDataLoader {
 
     private final JpaRepository<Training, Long> trainingRepository;
 
+    private final JpaRepository<Statistics, Long> statisticsRepository;
+
     @EventListener
     @Transactional
     @SuppressWarnings({"squid:S1854", "squid:S1481", "squid:S1192", "unused"})
@@ -46,7 +49,7 @@ class InitialDataLoader {
 
         List<User> sampleUserList = generateSampleUsers();
         List<Training> sampleTrainingList = generateTrainingData(sampleUserList);
-
+        List<Statistics> sampleStatisticsList = generateStatisticsData(sampleUserList, sampleTrainingList);
 
         log.info("Finished loading initial data");
     }
@@ -160,6 +163,55 @@ class InitialDataLoader {
         }
 
         return trainingData;
+    }
+
+    private List<Statistics> generateStatisticsData(List<User> users, List<Training> trainings) {
+        List<Statistics> statisticsData = new ArrayList<>();
+
+        // Calculate statistics for each user based on their trainings
+        for (User user : users) {
+            Statistics statistics = new Statistics(user);
+
+            // Calculate stats from trainings
+            List<Training> userTrainings = trainings.stream()
+                    .filter(t -> t.getUser().getId().equals(user.getId()))
+                    .toList();
+
+            int totalTrainings = userTrainings.size();
+            double totalDistance = userTrainings.stream()
+                    .mapToDouble(Training::getDistance)
+                    .sum();
+            int totalCalories = calculateCaloriesForTrainings(userTrainings);
+
+            statistics.setTotalTrainings(totalTrainings);
+            statistics.setTotalDistance(totalDistance);
+            statistics.setTotalCaloriesBurned(totalCalories);
+
+            statisticsData.add(statistics);
+        }
+
+        statisticsRepository.saveAll(statisticsData);
+        return statisticsData;
+    }
+
+    private int calculateCaloriesForTrainings(List<Training> trainings) {
+        return trainings.stream()
+                .mapToInt(training -> {
+                    double distance = training.getDistance();
+                    switch (training.getActivityType()) {
+                        case RUNNING:
+                            return (int) (distance * 100);
+                        case CYCLING:
+                            return (int) (distance * 50);
+                        case WALKING:
+                            return (int) (distance * 60);
+                        case TENNIS:
+                            return (int) (distance * 80);
+                        default:
+                            return (int) (distance * 70);
+                    }
+                })
+                .sum();
     }
 
     private void verifyDependenciesAutowired() {
